@@ -1,0 +1,47 @@
+&shared.txt
+
+# ---
+# SUBPROJECTS
+# ---
+
+^-cmake 	= \ .quail\cmake.txt
+
+# ---
+# CONSTANTS
+# ---
+
+%pr 		= x64-win-release
+%pd 		= x64-win-debug
+
+# ---
+# BASIC
+# ---
+
+!config 	= start "" notepad++ %_path%/.quail/quail.txt
+!todo		= start "" notepad++ %_path%/todo.md
+
+!code 		= start "" "%vscode_path%" "%_path%"
+!github		= github "%_path%"
+
+# ---
+# BUILDING
+# ---
+
+!bld 		= %shell% "%cmd%\build" '%_path%' '%vcvarsall_dir%' '%pd%'
+!bbld 		= %shell% "%cmd%\build" '%_path%' '%vcvarsall_dir%' '%pr%'
+
+C:\Projects\Metronome\build\x64-win-debug\project\metronome - should be a quail error ???!!!
+
+# ---
+# EXECUTING
+# ---
+
+!exe 		= %shell% "%cmd%\exe_with_res" '%_path%\build\%pd%\project\metronome' 'metronome'
+!eexe 		= %shell% "%cmd%\exe_with_res" '%_path%\build\%pr%\project\metronome' 'metronome'
+
+# ---
+# RUNNING
+# ---
+
+|run		= bld,exe
+|rrun		= bbld,eexe

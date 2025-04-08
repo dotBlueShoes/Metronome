@@ -1,0 +1,8 @@
+&shared.txt
+
+!config 	= start "" notepad++ %_path%/.quail/cmake.txt
+!refresh	= %shell% "%cmd%\cmake\refresh" "%_path%" '%vcvarsall_dir%'
+!clear		= %shell% "%cmd%\cmake\clear" "%_path%\build"
+
+# Alt. name
+|remove		= clear
