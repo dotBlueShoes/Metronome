@@ -38,10 +38,10 @@ target_include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/inc
 )
 
-target_include_directories (
-	${PROJECT_NAME} PRIVATE 
-	${margs_SOURCE_DIR}/include
-)
+# target_include_directories (
+# 	${PROJECT_NAME} PRIVATE 
+# 	${margs_SOURCE_DIR}/include
+# )
 
 CPMAddPackage ("gh:MAIPA01/mstd#v1.0.0")
 CPMAddPackage ("gh:MAIPA01/margs#v1.0.0")
