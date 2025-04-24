@@ -7,6 +7,12 @@ project (metronome-all VERSION 1.0.0 LANGUAGES C CXX)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include (properties)
 
+# --- Configurable Properties [ TODO ]
+set (OPUS_SHARED_LIBRARY 		true	)
+set (OGG_SHARED_LIBRARY 		true	)
+set (OPUSFILE_SHARED_LIBRARY 	false	)
+set (OPENAL_SHARED_LIBRARY 		true	)
+
 # --- Dependencies
 add_subdirectory (dependencies)
 

@@ -38,19 +38,49 @@ target_include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/inc
 )
 
+# --- LIBS For shared by all presets.
+target_link_libraries (${PROJECT_NAME} BLUELIB)
+target_link_libraries (${PROJECT_NAME} OGG)
+target_link_libraries (${PROJECT_NAME} OPUS)
+target_link_libraries (${PROJECT_NAME} OPUSFILE)
+target_link_libraries (${PROJECT_NAME} OPENAL)
+
+
 # target_include_directories (
 # 	${PROJECT_NAME} PRIVATE 
 # 	${margs_SOURCE_DIR}/include
 # )
 
-CPMAddPackage ("gh:MAIPA01/mstd#v1.0.0")
-CPMAddPackage ("gh:MAIPA01/margs#v1.0.0")
-
-# --- LIBS For shared by all presets.
-#target_link_libraries (${PROJECT_NAME} BLUELIB)
-target_link_libraries (${PROJECT_NAME} mstd)
-target_link_libraries (${PROJECT_NAME} margs)
+#CPMAddPackage ("gh:MAIPA01/mstd#v1.0.0")
+#CPMAddPackage ("gh:MAIPA01/margs#v1.0.0")
+#target_link_libraries (${PROJECT_NAME} mstd)
+#target_link_libraries (${PROJECT_NAME} margs)
 #target_link_libraries (${PROJECT_NAME} INTERFACE mstd)
+# - working one ->
+#CPMAddPackage("gh:MAIPA01/mstd#main")
+#
+#if(mstd_ADDED)
+#    include_directories(${mstd_SOURCE_DIR}/include)
+#    message(STATUS "CMake added local mstd: ${mstd_SOURCE_DIR}")
+#endif()
+#
+#CPMAddPackage("gh:MAIPA01/margs#main")
+#
+#if(margs_ADDED)
+#    include_directories(${margs_SOURCE_DIR}/include)
+#    message(STATUS "CMake added local margs: ${margs_SOURCE_DIR}")
+#endif()
+
+
+# --- Copy .dlls inside project build directory.
+add_custom_command ( 
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	$<TARGET_FILE:OPENAL> 
+	$<TARGET_FILE:OGG>
+	$<TARGET_FILE:OPUS>
+	$<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
 
 # --- Creates a 'symlink' for resources in builds directory.
 add_custom_command (
