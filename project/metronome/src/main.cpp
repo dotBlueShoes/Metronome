@@ -9,7 +9,12 @@
 #include "opus.hpp"
 
 //
-//HERE #include <margs/margs.hpp>
+// ERRORS at \mstd\string.hpp
+//#undef max
+//#undef min
+//#undef near
+//#undef far
+//#include <margs/margs.hpp>
 //
 
 //#include <iomanip>
