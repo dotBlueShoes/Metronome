@@ -8,15 +8,17 @@ list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include (properties)
 
 # --- Configurable Properties [ TODO ]
-set (OPUS_SHARED_LIBRARY 		true	)
-set (OGG_SHARED_LIBRARY 		true	)
+set (OPUS_SHARED_LIBRARY 		false	)
+set (OGG_SHARED_LIBRARY 		false	)
 set (OPUSFILE_SHARED_LIBRARY 	false	)
-set (OPENAL_SHARED_LIBRARY 		true	)
+set (OPENAL_SHARED_LIBRARY 		false	)
 
 # --- Dependencies
 add_subdirectory (dependencies)
 
 # --- Add 'defines' to all projects
+
+#add_compile_definitions (AL_LIBTYPE_STATIC)
 
 add_compile_definitions (_CRT_SECURE_NO_WARNINGS)
 add_compile_definitions (DEBUG_FLAG_LOGGING=${DEBUG_FLAG_LOGGING})

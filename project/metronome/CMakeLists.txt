@@ -1,17 +1,29 @@
 # --- Define a 'subproject'
 project (metronome VERSION 1.0.0 LANGUAGES C CXX)
 
+
 # --- Add header files
 file (GLOB_RECURSE HEADER_FILES
 	${PROJECT_SOURCE_DIR}/inc/*.h
 	${PROJECT_SOURCE_DIR}/inc/*.hpp
 )
 
+
 # --- Add needed DEFINE's
 add_compile_definitions (_CRT_SECURE_NO_WARNINGS)
 
+
+# --- OpenAL linked statically requires the following define also.
+if (NOT ${OPENAL_SHARED_LIBRARY}) 
+
+	add_compile_definitions (AL_LIBTYPE_STATIC)
+
+endif ()
+
+
 # --- Info Build Type
 message (STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 
 if 		(${PROFILE} EQUAL 1)
 
@@ -32,11 +44,13 @@ add_executable (
 	src/main.cpp
 )
 
+
 # --- Make this project 'headers' available to use.
 target_include_directories (
 	${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/inc
 )
+
 
 # --- LIBS For shared by all presets.
 target_link_libraries (${PROJECT_NAME} BLUELIB)
@@ -72,15 +86,58 @@ target_link_libraries (${PROJECT_NAME} OPENAL)
 #endif()
 
 
+#
 # --- Copy .dlls inside project build directory.
-add_custom_command ( 
-	TARGET ${PROJECT_NAME} POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	$<TARGET_FILE:OPENAL> 
-	$<TARGET_FILE:OGG>
-	$<TARGET_FILE:OPUS>
-	$<TARGET_FILE_DIR:${PROJECT_NAME}>
-)
+#
+
+
+if (${OPENAL_SHARED_LIBRARY}) 
+
+	add_custom_command ( 
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		$<TARGET_FILE:OPENAL> 
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>
+	)
+
+endif ()
+
+
+if (${OGG_SHARED_LIBRARY}) 
+
+	add_custom_command ( 
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		$<TARGET_FILE:OGG>
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>
+	)
+
+endif ()
+
+
+if (${OPUS_SHARED_LIBRARY}) 
+
+	add_custom_command ( 
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		$<TARGET_FILE:OPUS>
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>
+	)
+	
+endif ()
+
+
+if (${OPUSFILE_SHARED_LIBRARY}) 
+
+	add_custom_command ( 
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		$<TARGET_FILE:OPUSFILE> 
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>
+	)
+	
+endif ()
+
 
 # --- Creates a 'symlink' for resources in builds directory.
 add_custom_command (
