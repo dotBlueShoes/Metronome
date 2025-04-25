@@ -53,37 +53,13 @@ target_include_directories (
 
 
 # --- LIBS For shared by all presets.
+target_link_libraries (${PROJECT_NAME} margs)
 target_link_libraries (${PROJECT_NAME} BLUELIB)
 target_link_libraries (${PROJECT_NAME} OGG)
 target_link_libraries (${PROJECT_NAME} OPUS)
 target_link_libraries (${PROJECT_NAME} OPUSFILE)
 target_link_libraries (${PROJECT_NAME} OPENAL)
 
-
-# target_include_directories (
-# 	${PROJECT_NAME} PRIVATE 
-# 	${margs_SOURCE_DIR}/include
-# )
-
-#CPMAddPackage ("gh:MAIPA01/mstd#v1.0.0")
-#CPMAddPackage ("gh:MAIPA01/margs#v1.0.0")
-#target_link_libraries (${PROJECT_NAME} mstd)
-#target_link_libraries (${PROJECT_NAME} margs)
-#target_link_libraries (${PROJECT_NAME} INTERFACE mstd)
-# - working one ->
-#CPMAddPackage("gh:MAIPA01/mstd#main")
-#
-#if(mstd_ADDED)
-#    include_directories(${mstd_SOURCE_DIR}/include)
-#    message(STATUS "CMake added local mstd: ${mstd_SOURCE_DIR}")
-#endif()
-#
-#CPMAddPackage("gh:MAIPA01/margs#main")
-#
-#if(margs_ADDED)
-#    include_directories(${margs_SOURCE_DIR}/include)
-#    message(STATUS "CMake added local margs: ${margs_SOURCE_DIR}")
-#endif()
 
 
 #

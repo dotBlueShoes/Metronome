@@ -2,6 +2,20 @@ include (CPM)
 
 
 # ---
+# INCLUDE ONLY
+# ---
+
+
+FetchContent_Declare (
+	margs
+	GIT_REPOSITORY https://github.com/MAIPA01/margs.git
+	GIT_TAG main
+)
+
+FetchContent_MakeAvailable (margs)
+
+
+# ---
 # Static libraries
 # ---
 
@@ -140,19 +154,3 @@ if (${OPENAL_SHARED_LIBRARY})
 	target_include_directories (OPENAL INTERFACE ${OPENAL_INC_DIR})
 
 endif ()
-
-
-#FetchContent_Declare (
-#	margs
-#	GIT_REPOSITORY https://github.com/MAIPA01/margs.git
-#	GIT_TAG main
-#)
-#FetchContent_MakeAvailable (margs)
-
-#CPMAddPackage (
-#    NAME margs
-#    GIT_REPOSITORY https://github.com/MAIPA01/margs.git
-#    GIT_TAG v1.0.0
-#)
-
-#target_compile_options (TracyClient PUBLIC -Wno-format)

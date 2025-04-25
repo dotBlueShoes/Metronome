@@ -8,9 +8,10 @@
 #include "audio.hpp"
 #include "opus.hpp"
 
+#include <margs/margs.hpp>
+
 //#include <iomanip>
 //#include <algorithm>
-//#include <margs/margs.hpp>
 //void ExampleMARGS () {
 //    using namespace margs;
 //
@@ -77,7 +78,7 @@
 //	//LOGINFO ("%s\n", other.c_str ());
 //}
 
-s32 main (s32 argumentsCount, c8* arguments[]) {
+s32 main (s32 argumentsCount, c8** arguments) {
 
 	{ // BLUE_START
 		TIMESTAMP_BEGIN = TIMESTAMP::GetCurrent ();
@@ -101,9 +102,6 @@ s32 main (s32 argumentsCount, c8* arguments[]) {
 		AUDIO::LISTENER::SetPosition (0.0f, 0.0f, 0.0f);
 		AUDIO::LISTENER::SetGain (1.0f);
 
-		//ERROR ("Hello There!");
-
-		//load_opus (buffer, argv[1]);
 		OPUS::Load (buffer, "res\\1.opus");
 
 		AUDIO::SOURCE::SetBuffer (source, buffer);

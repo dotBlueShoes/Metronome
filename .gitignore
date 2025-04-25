@@ -9,11 +9,7 @@ x64/
 *.zip
 *.exe
 
-# LATEX
-# out
-# /latex/base/out/
-# all
-/latex/
+third_party/
 
 # Obsidian
 extras/ComputingGPU/.obsidian/workspace.json
