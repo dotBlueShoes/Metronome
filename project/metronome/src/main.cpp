@@ -5,16 +5,18 @@
 #define CONSOLE_COLOR_ENABLED
 #define LOGGER_TIME_FORMAT "%f"
 //
+#include "resources.hpp"
 #include "audio.hpp"
 #include "opus.hpp"
 
 //
 // ERRORS at \mstd\string.hpp
-//#undef max
-//#undef min
-//#undef near
-//#undef far
-//#include <margs/margs.hpp>
+#undef max
+#undef min
+#undef near
+#undef far
+#undef str
+#include <margs/margs.hpp>
 //
 
 //#include <iomanip>
@@ -109,7 +111,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		AUDIO::LISTENER::SetPosition (0.0f, 0.0f, 0.0f);
 		AUDIO::LISTENER::SetGain (1.0f);
 
-		OPUS::Load (buffer, "res\\1.opus");
+		OPUS::Load (buffer, METRONOME_TRACK_01_);
 
 		AUDIO::SOURCE::SetBuffer (source, buffer);
 		AUDIO::SOURCE::SetPosition (source, 0.0f, 0.0f, 0.0f);

@@ -18,8 +18,6 @@ add_subdirectory (dependencies)
 
 # --- Add 'defines' to all projects
 
-#add_compile_definitions (AL_LIBTYPE_STATIC)
-
 add_compile_definitions (_CRT_SECURE_NO_WARNINGS)
 add_compile_definitions (DEBUG_FLAG_LOGGING=${DEBUG_FLAG_LOGGING})
 add_compile_definitions (DEBUG_FLAG_MEMORY=${DEBUG_FLAG_MEMORY})
