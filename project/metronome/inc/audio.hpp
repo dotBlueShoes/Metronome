@@ -101,7 +101,7 @@ namespace AUDIO::SOURCE {
 	}
 
 	void Play (
-		INOUT 	ALuint& 		source
+		IN 		const ALuint& 	source
 	) {
 		alSourcePlay (source);
 		if (alGetError() != AL_NO_ERROR) ERROR (METRONOME_MESSAGE_AUDIO "Couldn't play the OpenAL source.");

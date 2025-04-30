@@ -1,4 +1,5 @@
-01. Make it play a given sound 1-9 sound 
-02. with a given bpm
-03. Args -bmp (integer), -sound (string), 
-04. Arg. -json (filename)
+01. Arg -s0 (string) - Make it play a given sound 1-9 sound.
+02. Arg -bmp (integer) - Make it play given bmp. 
+03. Arg. -json (filename).
+04. Arg -s1 (string) - Make it play a given sound 1-9 sound every accent.
+05. accent -> 1 s1 play 3 s0 play after setting
