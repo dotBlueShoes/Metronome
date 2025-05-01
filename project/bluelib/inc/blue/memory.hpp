@@ -91,34 +91,29 @@ namespace MEMORY {
 
 }
 
-namespace MEMORY::EXIT {
+//
+// - PRE - MEMORY EXIT - DATA
+//
 
-	using JUMPTABLE = void(*) (void*);
+//  ABOUT
+// Later `memory_exit.hpp` is being linked and therefore the following defines are both available inside
+//  `memory_exit.hpp` and other files that include said file. So for example when redefining `MEMORY_EXIT_TYPE_ATEXIT` 
+//  function we can reference the defines below to do so more easly.
 
-	u8 memoryCounter = 0;
-	JUMPTABLE jumps[MEMORY_EXIT_SIZE];
-	void* memory[MEMORY_EXIT_SIZE];
-
-	void ATEXIT () {
-		
-		for (u8 i = memoryCounter; i != 0; --i) {
-			auto jump = jumps[i - 1];
-			auto address = memory[i - 1];
-			jump (address);
-		}
-
-		//LOGINFO("%d \n", memoryCounter);
-		//LOGINFO ("%lld, %lld\n", (u64)jump, (u64)address);
-	}
-
-	void PUSH (void* address, JUMPTABLE jumpTable) {
-		jumps[memoryCounter] = jumpTable;
-		memory[memoryCounter] = address;
-		++memoryCounter;
-	}
-
-	void POP () {
-		--memoryCounter;
-	}
-
+#define MEMORY_EXIT_ADDRESS_CASE(anyFunction, size, memory) { \
+	case MEMORY_EXIT_ADDRESS: { \
+		auto&& _func = (void (*) (void*))anyFunction; \
+		_func (memory); \
+	} break; \
 }
+
+#if DDEBUG (DEBUG_FLAG_LOGGING)
+
+	#define MEMORY_EXIT_DEFAULT_CASE default: LOGWARN ("Unresolved MEMORY_EXIT_TYPE!\n");
+
+#else 
+
+	// TODO. This should be a very well documented error ! 
+	#define MEMORY_EXIT_DEFAULT_CASE default: { /* exit(-2) */ };
+
+#endif
