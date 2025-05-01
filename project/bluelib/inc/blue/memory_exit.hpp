@@ -4,53 +4,115 @@
 #pragma once
 #include "memory.hpp"
 
-#ifndef MEMORY_EXIT_ADDRESS
 
-	#define MEMORY_EXIT_ADDRESS 1
+//  ABOUT
+// We're defining 2 systems. SIZED and NOT_SIZED. It's important to note that both connot be used at the same time.
+//  Because of allocation order importance. Therefore as a programmer u have to decide on one and 
+//  ensure reusing that system in every dealloc method.
+
+//  ABOUT - MEMORY_TYPE_NOT_SIZED
+// By default use not sized variant for memory exiting. 
+// We cannot use both systems because it's important to dealloc memory in order of allocation!
+// #define MEMORY_TYPE_NOT_SIZED 
+
+
+#ifndef MEMORY_EXIT_SIZE
+	#define MEMORY_EXIT_SIZE 64
+#endif
+
+
+#ifndef MEMORY_TYPE
+	#define MEMORY_TYPE u32
+#endif
+
+
+#define DEALLOC_TYPE void
+#define DEALLOC_RET  
+
+#ifdef MEMORY_TYPE_NOT_SIZED
+
+	#define DEALLOC_ARGS INOUT void* data
 
 	namespace MEMORY::EXIT {
 
-		void TYPED_ATEXIT (u8 type, void* anyFunction, u32 size, void* memory) {
-			switch (type) {
-				MEMORY_EXIT_ADDRESS_CASE (anyFunction, size, memory);
-				MEMORY_EXIT_DEFAULT_CASE
+		u8 memoryCounter = 0;
+
+		void* functions	[MEMORY_EXIT_SIZE];
+		void* memories	[MEMORY_EXIT_SIZE];
+
+		void ATEXIT () {
+			for (u8 i = memoryCounter; i != 0; --i) {
+				auto& func		= functions	[i - 1];
+				auto& memory	= memories	[i - 1];
+
+				auto&& _func = (void (*) (void*))func;
+				_func (memory);
 			}
+		}
+
+		void PUSH (
+			void* function, 
+			void* memory
+		) {
+			functions[memoryCounter] 	= function;
+			memories[memoryCounter] 	= memory;
+
+			++memoryCounter;
+		}
+
+		void POP () {
+			--memoryCounter;
+		}
+
+	}
+
+#else
+
+	#define DEALLOC_ARGS IN	MEMORY_TYPE	size, INOUT void* data
+
+	namespace MEMORY::EXIT {
+
+		u8 memoryCounter = 0;
+
+		void* functions	[MEMORY_EXIT_SIZE];
+		void* memories	[MEMORY_EXIT_SIZE];
+		u32   sizes		[MEMORY_EXIT_SIZE];
+
+		void ATEXIT () {
+			for (u8 i = memoryCounter; i != 0; --i) {
+				auto& func		= functions	[i - 1];
+				auto& memory	= memories	[i - 1];
+				auto& size		= sizes 	[i - 1];
+
+				auto&& _func = (void (*) (MEMORY_TYPE, void*))func;
+				_func (size, memory);
+
+				LOGINFO ("call!\n");
+			}
+		}
+
+		void PUSH (
+			void* function, 
+			MEMORY_TYPE size, 
+			void* memory
+		) {
+			functions[memoryCounter] 	= function;
+			memories[memoryCounter] 	= memory;
+			sizes[memoryCounter] 		= size;
+
+			++memoryCounter;
+		}
+
+		void POP () {
+			--memoryCounter;
 		}
 
 	}
 
 #endif
 
-namespace MEMORY::EXIT {
-
-	u8 memoryCounter = 0;
-
-	void* functions	[MEMORY_EXIT_SIZE];
-	void* memories	[MEMORY_EXIT_SIZE];
-	u32   sizes		[MEMORY_EXIT_SIZE];
-	u8    types		[MEMORY_EXIT_SIZE];
-
-	void ATEXIT () {
-		for (u8 i = memoryCounter; i != 0; --i) {
-			auto& func		= functions	[i - 1];
-			auto& memory	= memories	[i - 1];
-			auto& size		= sizes 	[i - 1];
-			auto& type		= types 	[i - 1];
-			TYPED_ATEXIT (type, func, size, memory);
-		}
-	}
-
-	void PUSH (u8 type, void* function, u32 size, void* memory) {
-		functions[memoryCounter] 	= function;
-		memories[memoryCounter] 	= memory;
-		sizes[memoryCounter] 		= size;
-		types[memoryCounter] 		= type;
-
-		++memoryCounter;
-	}
-
-	void POP () {
-		--memoryCounter;
-	}
-
-}
+#define DEALLOC(name, body) \
+    DEALLOC_TYPE name (DEALLOC_ARGS) { \
+        body \
+        DEALLOC_RET \
+    }

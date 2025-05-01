@@ -3,10 +3,6 @@
 //
 #pragma once
 #include "debug.hpp"
-//
-#ifndef MEMORY_EXIT_SIZE
-#define MEMORY_EXIT_SIZE 64
-#endif
 
 //  'About'
 // - Implements a simple wrapper around 'malloc'
@@ -90,30 +86,3 @@ namespace MEMORY {
 	}
 
 }
-
-//
-// - PRE - MEMORY EXIT - DATA
-//
-
-//  ABOUT
-// Later `memory_exit.hpp` is being linked and therefore the following defines are both available inside
-//  `memory_exit.hpp` and other files that include said file. So for example when redefining `MEMORY_EXIT_TYPE_ATEXIT` 
-//  function we can reference the defines below to do so more easly.
-
-#define MEMORY_EXIT_ADDRESS_CASE(anyFunction, size, memory) { \
-	case MEMORY_EXIT_ADDRESS: { \
-		auto&& _func = (void (*) (void*))anyFunction; \
-		_func (memory); \
-	} break; \
-}
-
-#if DDEBUG (DEBUG_FLAG_LOGGING)
-
-	#define MEMORY_EXIT_DEFAULT_CASE default: LOGWARN ("Unresolved MEMORY_EXIT_TYPE!\n");
-
-#else 
-
-	// TODO. This should be a very well documented error ! 
-	#define MEMORY_EXIT_DEFAULT_CASE default: { /* exit(-2) */ };
-
-#endif

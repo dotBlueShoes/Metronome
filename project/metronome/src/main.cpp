@@ -117,9 +117,10 @@ s32 main (s32 argumentsCount, c8** arguments) {
 	}
 
 	{
-		MEMORY::EXIT::PUSH (MEMORY_EXIT_OPENAL, alDeleteBuffers, 1, &buffer);
-		MEMORY::EXIT::PUSH (MEMORY_EXIT_OPENAL, alDeleteSources, 1, &source);
+		MEMORY::EXIT::PUSH (alDeleteBuffers, 1, &buffer);
+		MEMORY::EXIT::PUSH (alDeleteSources, 1, &source);
 	}
+	
 
 	{ // THREADING
 		THREADS::YIELDARGS args { bmp, source };
@@ -131,8 +132,6 @@ s32 main (s32 argumentsCount, c8** arguments) {
    		thrd_join (iThread, NULL);
 		thrd_join (oThread, NULL);
 	}
-
-	//ERROR ("Simple ERROR!\n");
 
 
 	{ // OPENAL EXIT
