@@ -118,7 +118,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		AUDIO::SOURCE::SetGain (source, 1.0f);
 	}
 
-	{
+	{ // Future ERROR.
 		MEMORY::EXIT::PUSH (alDeleteBuffers, 1, &buffer);
 		MEMORY::EXIT::PUSH (alDeleteSources, 1, &source);
 	}
