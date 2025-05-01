@@ -52,7 +52,7 @@ namespace GLOBAL {
 			ALint sourceState;
 			do {
 				alGetSourcei (source, AL_SOURCE_STATE, &sourceState);
-			} while (sourceState != AL_STOPPED);
+			} while (sourceState == AL_PLAYING);
 		}
 	}
 

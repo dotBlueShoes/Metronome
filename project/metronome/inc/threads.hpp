@@ -9,6 +9,7 @@
 namespace THREADS {
 
 	struct YIELDARGS {
+		u16 wait;
 		u16 bmp;
 		ALuint source;
 	};
@@ -56,6 +57,29 @@ namespace THREADS {
 		}
 	
 		const auto args = *(YIELDARGS*)anyargs;
+
+		{ // Initial wait.
+			TIMESTAMP::Timestamp timestampCurrent = TIMESTAMP::GetCurrent ();
+			TIMESTAMP::Timestamp secondsCurrent = timestampCurrent;
+			u16 secondsPassed = 0;
+
+			while (GLOBAL::isStopPlayback) {
+
+				{ // Calculate seconds passed.
+					r32 timePassed = TIMESTAMP::GetElapsed (secondsCurrent);
+					if (timePassed >= 1) { 
+						secondsCurrent = TIMESTAMP::GetCurrent ();
+						++secondsPassed;
+
+						LOGINFO ("Delay at: %d\n", secondsPassed);
+					}
+				}
+
+				r32 timePassed = TIMESTAMP::GetElapsed (timestampCurrent);
+				if (timePassed >= args.wait) break;
+			}
+		}
+
 		GLOBAL::PlayBPM (args.bmp, args.source);
 	
 		return 0;

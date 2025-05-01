@@ -82,6 +82,8 @@ s32 main (s32 argumentsCount, c8** arguments) {
 	// START [IN PARAMS]
 	const c8* const& fileName = METRONOME_TRACK_01_; 
 	const u16 bmp = 120;
+	const u16 wait = 1;
+	const u16 volume = 75;
 	// END [IN PARAMS]
 
 
@@ -106,10 +108,10 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		alGenBuffers (1, &buffer);
 		alGenSources (1, &source);
 
-		AUDIO::LISTENER::SetPosition (0.0f, 0.0f, 0.0f);
-		AUDIO::LISTENER::SetGain (1.0f);
-
 		OPUS::Load (buffer, fileName);
+
+		AUDIO::LISTENER::SetPosition (0.0f, 0.0f, 0.0f);
+		AUDIO::LISTENER::SetGain (volume / 100.0f);
 
 		AUDIO::SOURCE::SetBuffer (source, buffer);
 		AUDIO::SOURCE::SetPosition (source, 0.0f, 0.0f, 0.0f);
@@ -120,10 +122,10 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		MEMORY::EXIT::PUSH (alDeleteBuffers, 1, &buffer);
 		MEMORY::EXIT::PUSH (alDeleteSources, 1, &source);
 	}
-	
+
 
 	{ // THREADING
-		THREADS::YIELDARGS args { bmp, source };
+		THREADS::YIELDARGS args { wait, bmp, source };
 
 		thrd_t iThread, oThread;
 		thrd_create (&oThread, THREADS::YIELD, &args);
