@@ -1,24 +1,11 @@
 ﻿// Created 2025.04.22 by Matthew Strumiłło (dotBlueShoes)
 //  LICENSE: GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 //
-// BLUELIB
-#define CONSOLE_COLOR_ENABLED
-#define LOGGER_TIME_FORMAT "%f"
+// HACK. Ensure the following is always included first.
+#include "bluelib.hpp"
 //
-#include "resources.hpp"
-#include "audio.hpp"
-#include "opus.hpp"
-//
-#include <threads.h>
-//
-// ERRORS at \mstd\string.hpp
-#undef max
-#undef min
-#undef near
-#undef far
-#undef str
-#include <margs/margs.hpp>
-//
+#include "threads.hpp"
+#include "global.hpp"
 
 //#include <iomanip>
 //#include <algorithm>
@@ -88,89 +75,6 @@
 //	//LOGINFO ("%s\n", other.c_str ());
 //}
 
-
-u8 isRunning = true;
-
-void PlayBPM (
-	IN 		const u16 bpm,
-	IN		const ALuint source
-) {
-	const r32 spb = 60.0 / bpm; // Seconds per beat
-
-	// TODO
-	// Due to underneeth implementation this might be quite slow.
-	// TEST if it's actually fast or if it can be written as faster. 
-	TIMESTAMP::Timestamp timestampCurrent = TIMESTAMP::GetCurrent ();
-	while (isRunning) {
-
-		r32 timePassed = TIMESTAMP::GetElapsed (timestampCurrent);
-
-		if (timePassed >= spb) {
-			timestampCurrent = TIMESTAMP::GetCurrent ();
-			//LOGINFO ("time: %f, spb: %f\n", timePassed, spb);
-			AUDIO::SOURCE::Play (source);
-		}
-
-	}
-	
-	{ // Wait for source to stop playing. 
-		ALint sourceState;
-		do {
-			alGetSourcei (source, AL_SOURCE_STATE, &sourceState);
-		} while (sourceState != AL_STOPPED);
-	}
-}
-
-
-struct OTHREADARGS {
-	u16 bmp;
-	ALuint source;
-};
-
-
-s32 ITHREAD (
-	INOUT 	void* arguments
-) {
-
-	// TODO
-	// This should error-out threadsafe way.
-	DEBUG (DEBUG_FLAG_LOGGING) { 
-		if (arguments != nullptr) LOGWARN ("Arguments passed to 'ITHREAD'!");
-	}
-
-	c8 buffer[128];
-	
-	while (isRunning) {
-	
-		// TODO
-		// Right now it waits for new-line. That's not needed. 
-		if (fgets (buffer, sizeof (buffer), stdin)) {
-			printf("You entered: %s", buffer);
-			isRunning = false;
-		}
-	
-	}
-
-    return 0;
-}
-
-
-s32 OTHREAD (
-	INOUT 	void* arguments
-) {
-
-	// TODO
-	// This should error-out threadsafe way.
-	DEBUG (DEBUG_FLAG_LOGGING) {
-		if (arguments == nullptr) LOGWARN ("No arguments passed to 'OTHREAD'!");
-	}
-
-	const auto args = *(OTHREADARGS*)arguments;
-	PlayBPM (args.bmp, args.source);
-
-    return 0;
-}
-
 s32 main (s32 argumentsCount, c8** arguments) {
 
 	// TODO
@@ -212,17 +116,23 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		AUDIO::SOURCE::SetGain (source, 1.0f);
 	}
 
+	{
+		MEMORY::EXIT::PUSH (MEMORY_EXIT_OPENAL, alDeleteBuffers, 1, &buffer);
+		MEMORY::EXIT::PUSH (MEMORY_EXIT_OPENAL, alDeleteSources, 1, &source);
+	}
 
 	{ // THREADING
-		OTHREADARGS args { bmp, source };
+		THREADS::YIELDARGS args { bmp, source };
 
 		thrd_t iThread, oThread;
-		thrd_create (&oThread, OTHREAD, &args);
-		thrd_create (&iThread, ITHREAD, NULL);
+		thrd_create (&oThread, THREADS::YIELD, &args);
+		thrd_create (&iThread, THREADS::INPUT, NULL);
 
    		thrd_join (iThread, NULL);
 		thrd_join (oThread, NULL);
 	}
+
+	//ERROR ("Simple ERROR!\n");
 
 
 	{ // OPENAL EXIT

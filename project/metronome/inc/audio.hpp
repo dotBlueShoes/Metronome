@@ -20,6 +20,7 @@ namespace AL_WRAPPER {
 	void DestroyContext (
 		INOUT 	void* 			context
 	) {
+		alcMakeContextCurrent (0);
 		alcDestroyContext ((ALCcontext*)context);
 	}
 
@@ -39,13 +40,13 @@ namespace AUDIO::LISTENER {
 		alcMakeContextCurrent (context);
 
 		{ // Future ERROR.
-			MEMORY::EXIT::PUSH (device, AL_WRAPPER::CloseDevice);
+			MEMORY::EXIT::PUSH (MEMORY_EXIT_ADDRESS, AL_WRAPPER::CloseDevice, 1, device);
 		}
 
 		if (context == nullptr) ERROR (METRONOME_MESSAGE_AUDIO "Couldn't create an OpenAL context.");
 
 		{ // Future ERROR.
-			MEMORY::EXIT::PUSH (context, AL_WRAPPER::DestroyContext);
+			MEMORY::EXIT::PUSH (MEMORY_EXIT_ADDRESS, AL_WRAPPER::DestroyContext, 1, context);
 		}
 	}
 
@@ -67,9 +68,8 @@ namespace AUDIO::LISTENER {
 		IN 		ALCdevice*& 	device,
 		IN 		ALCcontext*& 	context
 	) {
-		alcMakeContextCurrent (0);
-		alcDestroyContext (context);
-		alcCloseDevice (device);
+		AL_WRAPPER::DestroyContext (context);
+		AL_WRAPPER::CloseDevice (device);
 	}
 
 }
