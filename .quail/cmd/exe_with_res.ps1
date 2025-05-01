@@ -11,8 +11,7 @@ Push-Location $project_dir
 & ./$project_name.exe
 
 if ( -not $? ) {
-    $msg = $Error[0].Exception.Message
-    Write-Host "Encountered error during Deleting the Folder. Error Message is $msg. Please check."
+    Write-Host "EXE_WITH_RES.PS1 -> Execution returned a failure as STATUS!" -ForegroundColor Red
 }
 
 Pop-Location
