@@ -27,8 +27,8 @@
 # BUILDING
 # ---
 
-!bld 		= %shell% "%cmd%\build" '%_path%' '%vcvarsall_dir%' '%pd%'
-!bbld 		= %shell% "%cmd%\build" '%_path%' '%vcvarsall_dir%' '%pr%'
+!bld 		= %shell% "%cmd%\build" '%_path%' '%compilersets%' '%pd%'
+!bbld 		= %shell% "%cmd%\build" '%_path%' '%compilersets%' '%pr%'
 
 C:\Projects\Metronome\build\x64-win-debug\project\metronome - should be a quail error ???!!!
 

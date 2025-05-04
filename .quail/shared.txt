@@ -1,1 +1,5 @@
 %cmd			= %_path%\.quail\cmd
+
+# TODO %_quail% so that my compiler information is stored not in the repo.
+#%compilersets	= %_path%\.quail\cmd\clangset
+%compilersets	= %vcvarsall%
