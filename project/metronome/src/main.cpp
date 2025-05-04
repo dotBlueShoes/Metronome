@@ -119,8 +119,8 @@ s32 main (s32 argumentsCount, c8** arguments) {
 	}
 
 	{ // Future ERROR.
-		MEMORY::EXIT::PUSH (alDeleteBuffers, 1, &buffer);
-		MEMORY::EXIT::PUSH (alDeleteSources, 1, &source);
+		MEMORY::EXIT::PUSH (AL_WRAPPER::DestroyBuffers, 1, &buffer);
+		MEMORY::EXIT::PUSH (AL_WRAPPER::DestroySources, 1, &source);
 	}
 
 

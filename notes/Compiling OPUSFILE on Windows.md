@@ -65,8 +65,11 @@ Now you should have `.lib` and `.h` files for both.
 - Go to **Librarian > General > Additional Library Directories**:
     - Add paths to `ogg/build/Release` and `opus/build/Release`
 
+- If the .lib is supposed to be linked using different then msvc linker also Disable /GL
+    - Go to **Configuration Properties → C/C++ → Optimization**
+    - Set Whole Program Optimalization to none.
 
- - Right click the **opusfile** solution and select **build**
+- Right click the **opusfile** solution and select **build**
 
 #### Disabling OpenSSL
 

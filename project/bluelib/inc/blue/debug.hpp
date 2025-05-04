@@ -14,4 +14,4 @@
 #endif
 
 #define DDEBUG(type) DEBUG_TYPE & type
-#define DEBUG(type) if constexpr (DEBUG_TYPE & type == type)
+#define DEBUG(type) if constexpr ((DEBUG_TYPE & type) == type)

@@ -35,9 +35,11 @@
 
 	namespace MEMORY::EXIT {
 
+		using DeleteFunction = void (*) (DEALLOC_ARGS);
+
 		u8 memoryCounter = 0;
 
-		void* functions	[MEMORY_EXIT_SIZE];
+		DeleteFunction functions [MEMORY_EXIT_SIZE];
 		void* memories	[MEMORY_EXIT_SIZE];
 
 		void ATEXIT () {
@@ -45,13 +47,13 @@
 				auto& func		= functions	[i - 1];
 				auto& memory	= memories	[i - 1];
 
-				auto&& _func = (void (*) (void*))func;
+				auto&& _func = (DeleteFunction)func;
 				_func (memory);
 			}
 		}
 
 		void PUSH (
-			void* function, 
+			DeleteFunction function, 
 			void* memory
 		) {
 			functions[memoryCounter] 	= function;
@@ -74,7 +76,9 @@
 
 		u8 memoryCounter = 0;
 
-		void* functions	[MEMORY_EXIT_SIZE];
+		using DeleteFunction = void (*) (DEALLOC_ARGS);
+
+		DeleteFunction functions [MEMORY_EXIT_SIZE];
 		void* memories	[MEMORY_EXIT_SIZE];
 		u32   sizes		[MEMORY_EXIT_SIZE];
 
@@ -84,15 +88,14 @@
 				auto& memory	= memories	[i - 1];
 				auto& size		= sizes 	[i - 1];
 
-				auto&& _func = (void (*) (MEMORY_TYPE, void*))func;
+				auto&& _func = (DeleteFunction)func;
 				_func (size, memory);
-
-				LOGINFO ("call!\n");
 			}
 		}
 
+		
 		void PUSH (
-			void* function, 
+			DeleteFunction function, 
 			MEMORY_TYPE size, 
 			void* memory
 		) {
@@ -116,3 +119,4 @@
         body \
         DEALLOC_RET \
     }
+//#define end

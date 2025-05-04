@@ -45,6 +45,11 @@ add_executable (
 )
 
 
+# --- TODO. The opusfile lib provided does not contain required debug information (.pdb) file.
+# Said file should be recompiled with .pdb so the following ignore wouldn't be needed.
+target_link_options (metronome PRIVATE -Xlinker /ignore:4099)
+
+
 # --- Make this project 'headers' available to use.
 target_include_directories (
 	${PROJECT_NAME} PUBLIC

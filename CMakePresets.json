@@ -8,8 +8,8 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "installDir": "${sourceDir}/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
+                "CMAKE_C_COMPILER": "C:\\Program Files\\LLVM\\bin\\clang.exe",
+                "CMAKE_CXX_COMPILER": "C:\\Program Files\\LLVM\\bin\\clang++.exe"
             },
             "condition": {
                 "type": "equals",
