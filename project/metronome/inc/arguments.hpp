@@ -58,9 +58,15 @@ namespace ARGUMENTS::ARGUMENT {
 
 		// MEMORY ALLOCATION ! -> margs::args_map will deallocate at some point.
 		const auto& length = string.length () + 1; // + null-term
+		const auto&& buffer = string.c_str ();
+
 		ALLOCATE (c8, value, length * sizeof (c8));
-		std::memcpy (value, string.c_str (), length * sizeof (c8));
+		std::memcpy (value, buffer, length * sizeof (c8));
 		MEMORY::EXIT::PUSH (FREE, 1, value);
+
+		// PARSING
+		// TODO
+		//
 	}
 
 	void GetBPM (
@@ -68,6 +74,10 @@ namespace ARGUMENTS::ARGUMENT {
 		OUT 	u16& value
 	) {
 		value = map.get_value (METRONOME_ARGUMENT_NAME_BPM).as<u16> ();
+
+		// PARSING
+		if (value > 440) 	{ LOGWARN ("'BPM' value exceeded MAX!\n"); value = 440; return; }
+		if (value < 40) 	{ LOGWARN ("'BPM' value exceeded MIN!\n"); value = 40;  }
 	}
 
 	void GetWait (
@@ -75,6 +85,9 @@ namespace ARGUMENTS::ARGUMENT {
 		OUT 	u16& value
 	) {
 		value = map.get_value (METRONOME_ARGUMENT_NAME_WAIT).as<u16> ();
+
+		// PARSING
+		if (value > 10) 	{ LOGWARN ("'Wait' value exceeded MAX!\n"); value = 10; }
 	}
 
 	void GetVolume (
@@ -82,6 +95,10 @@ namespace ARGUMENTS::ARGUMENT {
 		OUT 	u16& value
 	) {
 		value = map.get_value (METRONOME_ARGUMENT_NAME_VOLUME).as<u16> ();
+
+		// PARSING
+		if (value > 100) 	{ LOGWARN ("'Volume' value exceeded MAX!\n"); value = 100; return; }
+		if (value < 1) 		{ LOGWARN ("'Volume' value exceeded MIN!\n"); value = 1;  }
 	}
 	
 }
