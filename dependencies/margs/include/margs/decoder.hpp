@@ -19,9 +19,9 @@ namespace margs {
 			// arithmetic
 			if constexpr (std::is_arithmetic_v<T>) {
 				if (!lhs.isScalar()) return false;
- 
+
 				const std::string& scalar = lhs.as<std::string>();
- 
+
 				// integral
 				if constexpr (std::is_integral_v<T>) {
 					// signed
@@ -50,9 +50,9 @@ namespace margs {
 	struct decoder<bool> {
 		static bool decode(const arg_value& lhs, bool& rhs) {
 			if (!lhs.isScalar()) return false;
- 
+
 			const std::string& arg_value = lhs.as<std::string>();
- 
+
 			if (arg_value == "true" || arg_value == "1") {
 				rhs = true;
 			}
@@ -62,22 +62,22 @@ namespace margs {
 			else {
 				return false;
 			}
- 
+
 			return true;
 		}
 	};
- 
+
 	template<class T>
 	struct decoder<std::vector<T>> {
 		static bool decode(const arg_value& lhs, std::vector<T>& rhs) {
 			if (!lhs.isSequence()) return false;
- 
+
 			rhs.clear();
 			rhs.reserve(lhs.size());
 			for (const arg_value& elem : lhs) {
 				rhs.push_back(elem.as<T>());
 			}
- 
+
 			return true;
 		}
 	};

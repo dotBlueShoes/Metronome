@@ -12,7 +12,7 @@ set (OPUS_SHARED_LIBRARY 		false	)
 set (OGG_SHARED_LIBRARY 		false	)
 set (OPUSFILE_SHARED_LIBRARY 	false	)
 set (OPENAL_SHARED_LIBRARY 		false	)
-set (MARGS_LOCALLY 				true	)
+set (MARGS_LOCALLY 				false	)
 
 # --- Dependencies
 add_subdirectory (dependencies)
