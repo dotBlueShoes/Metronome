@@ -15,23 +15,7 @@
 // We cannot use both systems because it's important to dealloc memory in order of allocation!
 // #define MEMORY_TYPE_NOT_SIZED 
 
-
-#ifndef MEMORY_EXIT_SIZE
-	#define MEMORY_EXIT_SIZE 64
-#endif
-
-
-#ifndef MEMORY_TYPE
-	#define MEMORY_TYPE u32
-#endif
-
-
-#define DEALLOC_TYPE void
-#define DEALLOC_RET  
-
 #ifdef MEMORY_TYPE_NOT_SIZED
-
-	#define DEALLOC_ARGS INOUT void* data
 
 	namespace MEMORY::EXIT {
 
@@ -69,8 +53,6 @@
 	}
 
 #else
-
-	#define DEALLOC_ARGS IN	MEMORY_TYPE	size, INOUT void* data
 
 	namespace MEMORY::EXIT {
 

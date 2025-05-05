@@ -1,0 +1,3 @@
+#pragma once
+#define METRONOME_VERSION_FULL_W L"0.1"
+#define METRONOME_VERSION_FULL "0.1"

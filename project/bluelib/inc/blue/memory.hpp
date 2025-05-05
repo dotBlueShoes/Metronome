@@ -9,6 +9,21 @@
 // - Implements a custom 'atexit' implementation that allows sending the parameter. 
 //
 
+
+#ifndef MEMORY_EXIT_SIZE
+	#define MEMORY_EXIT_SIZE 64
+#endif
+
+
+#ifndef MEMORY_TYPE
+	#define MEMORY_TYPE u32
+#endif
+
+
+#define DEALLOC_TYPE void
+#define DEALLOC_RET  
+
+
 #if DDEBUG (DEBUG_FLAG_MEMORY)
 
 	s32 allocationsCounter = 0;
@@ -37,10 +52,25 @@
 
 	#define ALLOCATE(type, address, size) _ALLOCATE<type> (address, size)
 
-	void FREE (void* address) {
-		--allocationsCounter;
-		free (address);
-	}
+	#ifdef MEMORY_TYPE_NOT_SIZED
+
+		#define DEALLOC_ARGS INOUT void* data
+
+		void FREE (DEALLOC_ARGS) {
+			--allocationsCounter;
+			free (data);
+		}
+
+	#else 
+
+		#define DEALLOC_ARGS IN	MEMORY_TYPE	size, INOUT void* data
+
+		void FREE (DEALLOC_ARGS) {
+			--allocationsCounter;
+			free (data);
+		}
+
+	#endif
 
 #else
 

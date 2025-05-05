@@ -6,15 +6,6 @@
 #include "resources.hpp"
 #include "audio.hpp"
 #include "opus.hpp"
-//
-// WARN `margs` uses the following names. We have to undefine them.
-#undef max
-#undef min
-#undef near
-#undef far
-#undef str
-//
-//#include <margs/margs.hpp>
 
 
 namespace GLOBAL {

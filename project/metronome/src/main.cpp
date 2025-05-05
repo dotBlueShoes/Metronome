@@ -4,96 +4,23 @@
 // HACK. Ensure the following is always included first.
 #include "bluelib.hpp"
 //
+#include "arguments.hpp"
 #include "threads.hpp"
 #include "global.hpp"
 
-//#include <iomanip>
-//#include <algorithm>
-//void ExampleMARGS () {
-//    using namespace margs;
-//
-//	args_analizer args = args_analizer (
-//
-//        help_data { "Args analizer sample description" },
-//
-//        args_builder::makeValue (
-//			"value", 'v', 1,
-//			help_data {
-//				"sample value description"
-//			}
-//        ), 
-//
-//        args_builder::makeFlag (
-//			"flag", 'f',  
-//            help_data { 
-//				"sample flag description"
-//			}
-//        )
-//
-//        //margs::args_builder::makeGroup (
-//		//	"group",
-//		//
-//        //    margs::help_data { 
-//		//		"sample group description"
-//		//	},
-//		//
-//        //    margs::args_builder::makeFlag (
-//		//		"group-flag", 'f',
-//        //        margs::help_data { 
-//		//			"sample group flag description"
-//		//		}
-//        //    )
-//		//
-//        //)
-//    );
-//
-//	// Get program args
-//    args_map arg_values;
-//
-//    try {
-//        arg_values = args.analize (argumentsCount, arguments);
-//    } catch (const args_exception& e) {
-//        ERROR ("%s\n", e.what ());
-//        return 1;
-//    }
-//
-//	// Get Value Arg 
-//    std::string value;
-//    if (arg_values.contains_value ("value")) { 
-//        value = arg_values.get_value ("value").as<std::string> (); 
-//    }
-//
-//    //if (arg_values.contains_flag("group::group-flag")) {
-//    //    cout << "Group flag" << endl;
-//    //}
-//
-//    //std::string sample ("Sample! Sample! Sample!");
-//	//std::string other = mstd::trim (sample);
-//
-//	
-//
-//	//LOGINFO ("%s\n", other.c_str ());
-//}
-
 s32 main (s32 argumentsCount, c8** arguments) {
 
-	// TODO
-	// arguments read.
-	// START [IN PARAMS]
-	const c8* const& fileName = METRONOME_TRACK_01_; 
-	const u16 bmp = 120;
-	const u16 wait = 1;
-	const u16 volume = 75;
-	// END [IN PARAMS]
+	ARGUMENTS::MAINARGS mainArgs {
+		nullptr,
+		METRONOME_ARGUMENT_DEFAULT_BPM,
+		METRONOME_ARGUMENT_DEFAULT_WAIT,
+		METRONOME_ARGUMENT_DEFAULT_VOLUME,
+	};
 
-
-	// START [AUDIO GLOBAL]
 	ALCdevice* device;
 	ALCcontext* context;
 	ALuint buffer;
 	ALuint source;
-	// END [AUDIO GLOBAL]
-
 
 	{ // BLUE START
 		TIMESTAMP_BEGIN = TIMESTAMP::GetCurrent ();
@@ -101,6 +28,17 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		LOGINFO ("Application Statred!\n");
 	}
 
+	ARGUMENTS::Get (argumentsCount, arguments, mainArgs);
+
+	const auto& filename 	= mainArgs.filename;
+	const auto& bpm 		= mainArgs.bpm;
+	const auto& wait 		= mainArgs.wait;
+	const auto& volume 		= mainArgs.volume;
+
+	LOGINFO (
+		"filename: %s, bpm: %d, wait: %d, volume: %d\n",
+		filename, bpm, wait, volume
+	);
 
 	{ // OPENAL INIT
 		AUDIO::LISTENER::Create (device, context);
@@ -108,7 +46,12 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		alGenBuffers (1, &buffer);
 		alGenSources (1, &source);
 
-		OPUS::Load (buffer, fileName);
+		OPUS::Load (buffer, filename);
+
+		{ // Release filepath.
+			MEMORY::EXIT::POP ();
+			FREE (1, filename);
+		}
 
 		AUDIO::LISTENER::SetPosition (0.0f, 0.0f, 0.0f);
 		AUDIO::LISTENER::SetGain (volume / 100.0f);
@@ -125,7 +68,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 
 
 	{ // THREADING
-		THREADS::YIELDARGS args { wait, bmp, source };
+		THREADS::YIELDARGS args { wait, bpm, source };
 
 		thrd_t iThread, oThread;
 		thrd_create (&oThread, THREADS::YIELD, &args);

@@ -1,3 +1,6 @@
+// Created 2025.05.01 by Matthew Strumiłło (dotBlueShoes)
+//  LICENSE: GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+//
 #pragma once
 
 #define METRONOME_TRACK_01_	"res\\base\\01_.opus"

@@ -6,13 +6,34 @@ include (CPM)
 # ---
 
 
-FetchContent_Declare (
-	margs
-	GIT_REPOSITORY https://github.com/MAIPA01/margs.git
-	GIT_TAG main
-)
+if (NOT ${MARGS_LOCALLY})
 
-FetchContent_MakeAvailable (margs)
+	message (STATUS "DISABLED - Locally library MARGS")
+	
+	FetchContent_Declare (
+		margs
+		GIT_REPOSITORY https://github.com/MAIPA01/margs.git
+		GIT_TAG main
+	)
+	
+	FetchContent_MakeAvailable (margs)
+
+else ()
+
+	message (STATUS "ENABLED - Locally library MARGS")
+
+	# --- Define 'mstd'
+	set (MSTD_INC_DIR ${CMAKE_CURRENT_LIST_DIR}/mstd/include)
+	add_library (mstd INTERFACE)
+	target_include_directories (mstd INTERFACE ${MSTD_INC_DIR})
+
+	# --- Define 'margs'
+	set (MARGS_INC_DIR ${CMAKE_CURRENT_LIST_DIR}/margs/include)
+	add_library (margs INTERFACE)
+	target_link_libraries (margs INTERFACE mstd)
+	target_include_directories (margs INTERFACE ${MARGS_INC_DIR})
+
+endif ()
 
 
 # ---
