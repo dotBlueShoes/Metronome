@@ -24,6 +24,13 @@
 #define DEALLOC_RET  
 
 
+#ifdef MEMORY_TYPE_NOT_SIZED
+	#define DEALLOC_ARGS INOUT void* data
+#else
+	#define DEALLOC_ARGS IN	MEMORY_TYPE	size, INOUT void* data
+#endif
+
+
 #if DDEBUG (DEBUG_FLAG_MEMORY)
 
 	s32 allocationsCounter = 0;
@@ -52,30 +59,15 @@
 
 	#define ALLOCATE(type, address, size) _ALLOCATE<type> (address, size)
 
-	#ifdef MEMORY_TYPE_NOT_SIZED
-
-		#define DEALLOC_ARGS INOUT void* data
-
-		void FREE (DEALLOC_ARGS) {
-			--allocationsCounter;
-			free (data);
-		}
-
-	#else 
-
-		#define DEALLOC_ARGS IN	MEMORY_TYPE	size, INOUT void* data
-
-		void FREE (DEALLOC_ARGS) {
-			--allocationsCounter;
-			free (data);
-		}
-
-	#endif
+	void FREE (DEALLOC_ARGS) {
+		--allocationsCounter;
+		free (data);
+	}
 
 #else
 
 	#define ALLOCATE(type, address, size) address = (type*) malloc (size)
-	void FREE (void* address) { free (address); }
+	void FREE (DEALLOC_ARGS) { free (data); }
 	#define LOGMEMORY() {} // dummy
 	#define INCALLOCCO() // dummy
 	#define DECALLOCCO() // dummy
