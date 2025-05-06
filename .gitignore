@@ -1,6 +1,8 @@
 # Enviroment
+.cache/
 .vscode/
 /.vs/
+
 
 # Builds
 build/
@@ -8,8 +10,6 @@ x64/
 
 *.zip
 *.exe
-
-third_party/
 
 # Obsidian
 extras/ComputingGPU/.obsidian/workspace.json

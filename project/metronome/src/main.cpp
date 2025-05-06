@@ -35,7 +35,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		LOGINFO ("Application Statred!\n");
 	}
 
-	{ // WAVE TESTING
+	{ // WAVE TYPE TESTING
 		TIMESTAMP::Timestamp before = TIMESTAMP::GetCurrent ();
 		static r32 val;
 

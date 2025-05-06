@@ -13,6 +13,9 @@
 //  - WAVE_BITWISE_SCALING_OPT (might outperform normal multiply in some embedded cases)
 //  - WAVE_NO_OPT (uses the easy to understand solution without much opts)
 
+//  TODO
+// This code could be further optimized via SIMD use.
+
 
 class w8 {
 
