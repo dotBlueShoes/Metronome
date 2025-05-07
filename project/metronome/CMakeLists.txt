@@ -57,7 +57,7 @@ target_include_directories (
 )
 
 
-# --- LIBS For shared by all presets.
+# --- LIBS.
 target_link_libraries (${PROJECT_NAME} margs)
 target_link_libraries (${PROJECT_NAME} BLUELIB)
 target_link_libraries (${PROJECT_NAME} OGG)

@@ -10,7 +10,3 @@ x64/
 
 *.zip
 *.exe
-
-# Obsidian
-extras/ComputingGPU/.obsidian/workspace.json
-

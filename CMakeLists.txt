@@ -13,6 +13,7 @@ set (OGG_SHARED_LIBRARY 		false	)
 set (OPUSFILE_SHARED_LIBRARY 	false	)
 set (OPENAL_SHARED_LIBRARY 		false	)
 set (MARGS_LOCALLY 				false	)
+set (BLUELIB_LOCALLY 			false	)
 
 # --- Dependencies
 add_subdirectory (dependencies)
@@ -25,5 +26,5 @@ add_compile_definitions (DEBUG_FLAG_CLOCKS=${DEBUG_FLAG_CLOCKS})
 add_compile_definitions (DEBUG_FLAG_POSTLOGGING=${DEBUG_FLAG_POSTLOGGING})
 
 # --- Project's sources
-add_subdirectory (project/bluelib)
+#add_subdirectory (project/bluelib)
 add_subdirectory (project/metronome)
