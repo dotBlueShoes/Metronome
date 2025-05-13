@@ -7,13 +7,13 @@ project (metronome-all VERSION 1.0.0 LANGUAGES C CXX)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include (properties)
 
-# --- Configurable Properties [ TODO ]
-set (OPUS_SHARED_LIBRARY 		false	)
-set (OGG_SHARED_LIBRARY 		false	)
-set (OPUSFILE_SHARED_LIBRARY 	false	)
-set (OPENAL_SHARED_LIBRARY 		false	)
-set (MARGS_LOCALLY 				false	)
-set (BLUELIB_LOCALLY 			false	)
+# --- Configurable Properties
+option (OPUS_SHARED_LIBRARY     "Link 'opus' as shared library"             OFF)
+option (OGG_SHARED_LIBRARY      "Link 'ogg' as shared library"              OFF)
+option (OPUSFILE_SHARED_LIBRARY "Link 'opusfile' as shared library"         OFF)
+option (OPENAL_SHARED_LIBRARY   "Link 'openal' as shared library"           OFF)
+option (MARGS_LOCALLY           "Link 'margs' sources from local cache"     OFF)
+option (BLUELIB_LOCALLY         "Link 'bluelib' sources from local cache"   OFF)
 
 # --- Dependencies
 add_subdirectory (dependencies)

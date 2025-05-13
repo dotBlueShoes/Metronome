@@ -19,9 +19,11 @@ namespace GLOBAL {
 
 	void PlayBPM (
 		IN 		const u16 bpm,
+        IN 		const u8 pattern,
 		IN		const ALuint source
 	) {
 		const r32 spb = 60.0 / bpm; // Seconds per beat
+        u8 patternIterator = 0;
 
 		// TODO
 		// Due to underneeth implementation this might be quite slow.
@@ -34,6 +36,16 @@ namespace GLOBAL {
 			if (timePassed >= spb) {
 				timestampCurrent = TIMESTAMP::GetCurrent ();
 				//LOGINFO ("time: %f, spb: %f\n", timePassed, spb);
+
+                // Every pattern note is louder.
+                if (patternIterator < pattern) {
+                    AUDIO::SOURCE::SetGain (source, 0.25f);
+                    ++patternIterator;
+                } else {
+                    AUDIO::SOURCE::SetGain (source, 1.0f);
+                    patternIterator = 0;
+                }
+                
 				AUDIO::SOURCE::Play (source);
 			}
 

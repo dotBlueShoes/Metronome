@@ -9,9 +9,10 @@
 namespace THREADS {
 
 	struct YIELDARGS {
-		u16 wait;
-		u16 bmp;
-		ALuint source;
+		METRONOME_ARGUMENT_TYPE_WAIT        wait;
+		METRONOME_ARGUMENT_TYPE_BPM         bmp;
+        METRONOME_ARGUMENT_TYPE_PATTERN     pattern;
+		ALuint                              source;
 	};
 
 }
@@ -80,7 +81,7 @@ namespace THREADS {
 			}
 		}
 
-		GLOBAL::PlayBPM (args.bmp, args.source);
+		GLOBAL::PlayBPM (args.bmp, args.pattern, args.source);
 	
 		return 0;
 	}

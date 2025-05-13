@@ -99,7 +99,7 @@ namespace AUDIO::SOURCE {
 	}
 		
 	void SetGain (
-		INOUT 	ALuint& 		source,
+		INOUT 	const ALuint& 	source,
 		IN 		const ALfloat& 	gain
 	) {
 		alSourcef (source, AL_GAIN, gain);

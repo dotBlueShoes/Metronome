@@ -7,6 +7,7 @@
 #include "arguments.hpp"
 #include "threads.hpp"
 #include "global.hpp"
+#include <blue/wave.hpp>
 
 
 s32 main (s32 argumentsCount, c8** arguments) {
@@ -16,24 +17,44 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		METRONOME_ARGUMENT_DEFAULT_BPM,
 		METRONOME_ARGUMENT_DEFAULT_WAIT,
 		METRONOME_ARGUMENT_DEFAULT_VOLUME,
+        METRONOME_ARGUMENT_DEFAULT_PATTERN,
 	};
+
 
 	ALCdevice* device;
 	ALCcontext* context;
 	ALuint buffer;
 	ALuint source;
 
+
+    { // BLUE START
+        TIMESTAMP_BEGIN = TIMESTAMP::GetCurrent ();
+        DEBUG (DEBUG_FLAG_LOGGING) putc ('\n', stdout); // Align fututre debug-logs
+        LOGINFO ("Application Statred!\n");
+    }
+
+
 	ARGUMENTS::Get (argumentsCount, arguments, mainArgs);
+
 
 	const auto& filename 	= mainArgs.filename;
 	const auto& bpm 		= mainArgs.bpm;
 	const auto& wait 		= mainArgs.wait;
 	const auto& volume 		= mainArgs.volume;
+    auto& pattern 	        = mainArgs.pattern;
+
 
 	LOGINFO (
-		"filename: %s, bpm: %d, wait: %d, volume: %d\n",
-		filename, bpm, wait, volume
+		"filename: %s, bpm: %d, wait: %d, volume: %d, pattern: %d\n",
+		filename, bpm, wait, volume, pattern
 	);
+
+    {
+        // Offset
+        // 1 means every 1byte which tlanslates to pattern iterator being always equal to 0.
+        --pattern;
+    }
+
 
 	{ // OPENAL INIT
 		AUDIO::LISTENER::Create (device, context);
@@ -56,6 +77,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 		AUDIO::SOURCE::SetGain (source, 1.0f);
 	}
 
+
 	{ // Future ERROR.
 		MEMORY::EXIT::PUSH (AL_WRAPPER::DestroyBuffers, 1, &buffer);
 		MEMORY::EXIT::PUSH (AL_WRAPPER::DestroySources, 1, &source);
@@ -63,7 +85,7 @@ s32 main (s32 argumentsCount, c8** arguments) {
 
 
 	{ // THREADING
-		THREADS::YIELDARGS args { wait, bpm, source };
+		THREADS::YIELDARGS args { wait, bpm, pattern, source };
 
 		thrd_t iThread, oThread;
 		thrd_create (&oThread, THREADS::YIELD, &args);

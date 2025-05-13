@@ -23,21 +23,31 @@
 #define METRONOME_ARGUMENT_NAME_BPM 				"bpm"
 #define METRONOME_ARGUMENT_NAME_WAIT 				"wait"
 #define METRONOME_ARGUMENT_NAME_VOLUME 				"volume"
+#define METRONOME_ARGUMENT_NAME_PATTERN 			"pattern"
 
 #define METRONOME_ARGUMENT_SHORT_FILENAME 			'f'
 #define METRONOME_ARGUMENT_SHORT_BPM 				'b'
 #define METRONOME_ARGUMENT_SHORT_WAIT 				'w'
 #define METRONOME_ARGUMENT_SHORT_VOLUME 			'v'
+#define METRONOME_ARGUMENT_SHORT_PATTERN 			'p'
 
 #define METRONOME_ARGUMENT_DESCRIPTION_FILENAME 	"desc..."
 #define METRONOME_ARGUMENT_DESCRIPTION_BPM 			"desc..."
 #define METRONOME_ARGUMENT_DESCRIPTION_WAIT 		"desc..."
 #define METRONOME_ARGUMENT_DESCRIPTION_VOLUME 		"desc..."
+#define METRONOME_ARGUMENT_DESCRIPTION_PATTERN 		"desc..."
 
 #define METRONOME_ARGUMENT_DEFAULT_FILENAME			METRONOME_TRACK_01_
 #define METRONOME_ARGUMENT_DEFAULT_BPM 				120
 #define METRONOME_ARGUMENT_DEFAULT_WAIT 			1
 #define METRONOME_ARGUMENT_DEFAULT_VOLUME 			75
+#define METRONOME_ARGUMENT_DEFAULT_PATTERN 		    4
+
+#define METRONOME_ARGUMENT_TYPE_FILENAME			std::string
+#define METRONOME_ARGUMENT_TYPE_BPM 				u16
+#define METRONOME_ARGUMENT_TYPE_WAIT 			    u16
+#define METRONOME_ARGUMENT_TYPE_VOLUME 			    u16
+#define METRONOME_ARGUMENT_TYPE_PATTERN 		    u8
 
 
 
@@ -54,7 +64,8 @@ namespace ARGUMENTS::ARGUMENT {
 		IN 		const margs::args_map& map,
 		OUT 	c8*& value
 	) {
-		const auto& string = map.get_value (METRONOME_ARGUMENT_NAME_FILENAME).as<std::string> ();
+		const auto& string = map.get_value (METRONOME_ARGUMENT_NAME_FILENAME)
+            .as<METRONOME_ARGUMENT_TYPE_FILENAME> ();
 
 		// MEMORY ALLOCATION ! -> margs::args_map will deallocate at some point.
 		const auto& length = string.length () + 1; // + null-term
@@ -73,7 +84,8 @@ namespace ARGUMENTS::ARGUMENT {
 		IN 		const margs::args_map& map,
 		OUT 	u16& value
 	) {
-		value = map.get_value (METRONOME_ARGUMENT_NAME_BPM).as<u16> ();
+		value = map.get_value (METRONOME_ARGUMENT_NAME_BPM)
+            .as<METRONOME_ARGUMENT_TYPE_BPM> ();
 
 		// PARSING
 		if (value > 440) 	{ LOGWARN ("'BPM' value exceeded MAX!\n"); value = 440; return; }
@@ -84,7 +96,8 @@ namespace ARGUMENTS::ARGUMENT {
 		IN 		const margs::args_map& map,
 		OUT 	u16& value
 	) {
-		value = map.get_value (METRONOME_ARGUMENT_NAME_WAIT).as<u16> ();
+		value = map.get_value (METRONOME_ARGUMENT_NAME_WAIT)
+            .as<METRONOME_ARGUMENT_TYPE_WAIT> ();
 
 		// PARSING
 		if (value > 10) 	{ LOGWARN ("'Wait' value exceeded MAX!\n"); value = 10; }
@@ -94,11 +107,24 @@ namespace ARGUMENTS::ARGUMENT {
 		IN 		const margs::args_map& map,
 		OUT 	u16& value
 	) {
-		value = map.get_value (METRONOME_ARGUMENT_NAME_VOLUME).as<u16> ();
+		value = map.get_value (METRONOME_ARGUMENT_NAME_VOLUME)
+            .as<METRONOME_ARGUMENT_TYPE_VOLUME> ();
 
 		// PARSING
 		if (value > 100) 	{ LOGWARN ("'Volume' value exceeded MAX!\n"); value = 100; return; }
 		if (value < 1) 		{ LOGWARN ("'Volume' value exceeded MIN!\n"); value = 1;  }
+	}
+
+    void GetPattern (
+		IN 		const margs::args_map& map,
+		OUT 	u8& value
+	) {
+		value = map.get_value (METRONOME_ARGUMENT_NAME_PATTERN)
+            .as<METRONOME_ARGUMENT_TYPE_PATTERN> ();
+
+		// PARSING
+		if (value > 16) 	{ LOGWARN ("'Volume' value exceeded MAX!\n"); value = 16; return; }
+		if (value < 1) 		{ LOGWARN ("'Volume' value exceeded MIN!\n"); value = 1; }
 	}
 	
 }
@@ -107,10 +133,11 @@ namespace ARGUMENTS::ARGUMENT {
 namespace ARGUMENTS {
 
 	struct MAINARGS {
-		c8* 	filename; 
-		u16 	bpm;
-		u16 	wait;
-		u16 	volume;
+		c8* 	                        filename; 
+		METRONOME_ARGUMENT_TYPE_BPM 	bpm;
+		METRONOME_ARGUMENT_TYPE_WAIT 	wait;
+		METRONOME_ARGUMENT_TYPE_VOLUME 	volume;
+        METRONOME_ARGUMENT_TYPE_PATTERN pattern;
 	};
 
 	void Get (
@@ -123,6 +150,7 @@ namespace ARGUMENTS {
 		auto& bpm 		= args.bpm;
 		auto& wait 		= args.wait;
 		auto& volume 	= args.volume;
+        auto& pattern 	= args.pattern;
 
 		using namespace margs;
 		using namespace mstd;
@@ -134,28 +162,35 @@ namespace ARGUMENTS {
 			args_builder::makeValue (
 
 				METRONOME_ARGUMENT_NAME_FILENAME, METRONOME_ARGUMENT_SHORT_FILENAME, 1,  
-				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_FILENAME}
+				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_FILENAME }
 
 			), 
 
 			args_builder::makeValue (
 
 				METRONOME_ARGUMENT_NAME_BPM, METRONOME_ARGUMENT_SHORT_BPM, 1,  
-				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_BPM}
+				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_BPM }
 
 			), 
 
 			args_builder::makeValue (
 
 				METRONOME_ARGUMENT_NAME_WAIT, METRONOME_ARGUMENT_SHORT_WAIT, 1,  
-				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_WAIT}
+				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_WAIT }
 
 			), 
 
 			args_builder::makeValue (
 
 				METRONOME_ARGUMENT_NAME_VOLUME, METRONOME_ARGUMENT_SHORT_VOLUME, 1,  
-				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_VOLUME}
+				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_VOLUME }
+
+			),
+
+            args_builder::makeValue (
+
+				METRONOME_ARGUMENT_NAME_PATTERN, METRONOME_ARGUMENT_SHORT_PATTERN, 1,  
+				help_data { .description = METRONOME_ARGUMENT_DESCRIPTION_PATTERN }
 
 			)
 
@@ -284,6 +319,10 @@ namespace ARGUMENTS {
 
 		if (values.contains_value (METRONOME_ARGUMENT_NAME_VOLUME)) {
 			ARGUMENT::GetVolume (values, volume);
+		}
+
+        if (values.contains_value (METRONOME_ARGUMENT_NAME_PATTERN)) {
+			ARGUMENT::GetPattern (values, pattern);
 		}
 
 		
