@@ -8,7 +8,7 @@ param (
 #  When running from console we simply need to change the path to build's path.
 
 Push-Location $project_dir
-& ./$project_name.exe
+& ./$project_name.exe $args
 
 if ( -not $? ) {
     Write-Host "EXE_WITH_RES.PS1 -> Execution returned a failure as STATUS!" -ForegroundColor Red
